@@ -28,7 +28,7 @@
             <Slider
                 Margin="16,8"
                 IsSnapToTickEnabled="True"
-                Maximum="10"
+                Maximum="100"
                 Minimum="1"
                 TickFrequency="1"
                 Value="{Binding MaxConcurrentDownloads}" />

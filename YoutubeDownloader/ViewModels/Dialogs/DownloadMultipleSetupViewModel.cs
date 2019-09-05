@@ -61,20 +61,22 @@ namespace YoutubeDownloader.ViewModels.Dialogs
             foreach (var video in SelectedVideos)
             {
                 // Generate file path
-                var fileName = $"{video.GetFileNameSafeTitle()}.{SelectedFormat}";
+                var fileName = $"{video.GetFileNameSafeTitle()}-{video.Id}.{SelectedFormat}";
                 var filePath = Path.Combine(dirPath, fileName);
+                if (!File.Exists(filePath))
+                {
+                    // Ensure file paths are unique because users will not be able to confirm overwrites
+                    filePath = FileEx.MakeUniqueFilePath(filePath);
 
-                // Ensure file paths are unique because users will not be able to confirm overwrites
-                filePath = FileEx.MakeUniqueFilePath(filePath);
+                    // Create empty file to "lock in" the file path
+                    FileEx.CreateEmptyFile(filePath);
 
-                // Create empty file to "lock in" the file path
-                FileEx.CreateEmptyFile(filePath);
+                    // Create download view model
+                    var download = _viewModelFactory.CreateDownloadViewModel(video, filePath, SelectedFormat);
 
-                // Create download view model
-                var download = _viewModelFactory.CreateDownloadViewModel(video, filePath, SelectedFormat);
-
-                // Add to list
-                downloads.Add(download);
+                    // Add to list
+                    downloads.Add(download);
+                }
             }
 
             // Close dialog

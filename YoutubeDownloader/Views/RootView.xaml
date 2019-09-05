@@ -28,10 +28,11 @@
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
 
-            <!--  Toolbar  -->
+            <!--  Query and Setting Bar  -->
             <Grid
                 Grid.Row="0"
                 Background="{DynamicResource PrimaryHueMidBrush}"
@@ -54,7 +55,7 @@
                             x:Name="QueryTextBox"
                             Grid.Column="0"
                             Margin="6"
-                            materialDesign:HintAssist.Hint="URL or search query"
+                            materialDesign:HintAssist.Hint="URL or Search Query"
                             materialDesign:TextFieldAssist.DecorationVisibility="Hidden"
                             BorderThickness="0"
                             FontSize="16"
@@ -73,6 +74,7 @@
                                 Height="24"
                                 Kind="ArrowRight" />
                         </Button>
+
                     </Grid>
                 </materialDesign:Card>
 
@@ -90,15 +92,42 @@
                 </Button>
             </Grid>
 
+            <!--  ToolBar  -->
+            <materialDesign:Card Grid.Row="1">
+                <Grid Margin="0,6,12,6">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+
+                    <Button
+                        Grid.Column="1"
+                        Padding="10,5,10,5"
+                        Command="{s:Action RestartUnSuccessfulDownload}"
+                        Content="Restart UnSuccessful Download">
+                    </Button>
+
+                    <Button
+                        Grid.Column="2"
+                        Margin="12,0,0,0"
+                        Padding="10,5,10,5"
+                        Command="{s:Action RemoveDoneDownload}"
+                        Content="Remove Done Download">
+                    </Button>
+
+                </Grid>
+            </materialDesign:Card>
+
             <!--  Progress  -->
             <ProgressBar
-                Grid.Row="1"
+                Grid.Row="2"
                 Background="Transparent"
                 IsIndeterminate="{Binding IsProgressIndeterminate}"
                 Value="{Binding ProgressManager.Progress, Mode=OneWay}" />
 
             <!--  Content  -->
-            <Grid Grid.Row="2">
+            <Grid Grid.Row="3">
                 <!--  Placeholder  -->
                 <TextBlock
                     Margin="32"
@@ -113,9 +142,10 @@
                     Background="{DynamicResource MaterialDesignCardBackground}"
                     ColumnWidth="Auto"
                     HorizontalScrollBarVisibility="Disabled"
-                    ItemsSource="{Binding Downloads}"
+                    ItemsSource="{Binding Downloads, IsAsync=True}"
                     ScrollViewer.CanContentScroll="False"
                     VerticalScrollBarVisibility="Auto"
+                    EnableRowVirtualization="True"
                     Visibility="{Binding Downloads.Count, Converter={x:Static s:BoolToVisibilityConverter.Instance}}">
                     <DataGrid.RowStyle>
                         <Style BasedOn="{StaticResource {x:Type DataGridRow}}" TargetType="{x:Type DataGridRow}">

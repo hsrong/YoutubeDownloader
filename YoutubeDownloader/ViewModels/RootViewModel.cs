@@ -212,10 +212,22 @@ namespace YoutubeDownloader.ViewModels
             Downloads.Remove(download);
         }
 
+        public void RemoveDoneDownload()
+        {
+            var successfulDownloads = Downloads.Where(d => d.IsSuccessful).ToArray();
+            Downloads.RemoveRange(successfulDownloads);
+        }
+
         public void RemoveInactiveDownloads()
         {
             var inactiveDownloads = Downloads.Where(d => !d.IsActive).ToArray();
             Downloads.RemoveRange(inactiveDownloads);
+        }
+
+        public void RestartUnSuccessfulDownload()
+        {
+            var canRestartDownloads = Downloads.Where(d => d.IsCanceled || d.IsFailed).ToArray();
+            canRestartDownloads.ToList().ForEach(d => d.Restart());
         }
     }
 }
